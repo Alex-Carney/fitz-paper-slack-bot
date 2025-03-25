@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ArxivQueryService } from './services/arxiv-query.service';
+import { ArxivQueryService } from './api/services/arxiv-query.service';
 import { parseStringPromise } from 'xml2js';
 import { ConsoleLogger } from '@nestjs/common';
 

@@ -1,5 +1,5 @@
 import { PrismaService } from 'nestjs-prisma';
-import { User, UsersOnSubscriptions } from '@prisma/client';
+import { User } from '@prisma/client';
 
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -19,17 +19,6 @@ export class UserRepository {
       data: {
         slackId,
         slackName: slackName,
-      },
-    });
-  }
-
-  async getAllUserSubscriptions(
-    slackId: string,
-  ): Promise<UsersOnSubscriptions[]> {
-    // Get all subscriptions for a user from the through table UsersOnSubscriptions
-    return this.prisma.usersOnSubscriptions.findMany({
-      where: {
-        slackId,
       },
     });
   }

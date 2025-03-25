@@ -30,17 +30,16 @@ model Subscription {
 }
 
 model UsersOnSubscriptions {
-  id Int @id @default(autoincrement())
-
   subscriptionId Int
   slackId        String
-
-  role Role
+  role           UserSubscriptionRole
 
   createdAt DateTime @default(now())
+
+  @@id([subscriptionId, slackId])
 }
 
-enum Role {
+enum UserSubscriptionRole {
   ADMIN
   MEMBER
 }

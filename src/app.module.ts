@@ -1,10 +1,10 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { ArxivQueryService } from './services/arxiv-query.service';
 import { PrismaModule } from 'nestjs-prisma';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ApiModule } from './api/api.module';
 
 @Module({
-  imports: [HttpModule, PrismaModule.forRoot()],
-  providers: [ArxivQueryService],
+  imports: [PrismaModule.forRoot(), ScheduleModule.forRoot(), ApiModule],
+  providers: [],
 })
 export class AppModule {}

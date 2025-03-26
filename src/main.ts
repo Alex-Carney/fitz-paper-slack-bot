@@ -1,43 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ArxivQueryService } from './api/services/arxiv-query.service';
-import { parseStringPromise } from 'xml2js';
-import { ConsoleLogger } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe, ConsoleLogger } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule, {
+  const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger(),
   });
 
-  const arxivService = app.get(ArxivQueryService);
-  const query = 'quantum computing';
+  // Enable global validation
+  app.useGlobalPipes(new ValidationPipe());
 
-  console.log(`Searching arXiv for "${query}"...\n`);
+  // Configure Swagger
+  const config = new DocumentBuilder()
+    .setTitle('My API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
-  try {
-    const response = await arxivService.searchPapers(
-      ['Fitzpatrick Mattias,Viola Lorenza'],
-      [query],
-      new Date(new Date().setFullYear(new Date().getFullYear() - 10)),
-      new Date(),
-    );
-    const parsed = await parseStringPromise(response);
-
-    const entries = parsed.feed.entry || [];
-    entries.forEach((entry, idx) => {
-      console.log(`${idx + 1}. ${entry.title[0].trim()}`);
-      console.log(`   Authors: ${entry.author.map((a) => a.name).join(', ')}`);
-      console.log(`   Published: ${entry.published[0]}`);
-      console.log(`   Link: ${entry.id[0]}\n`);
-    });
-
-    if (entries.length === 0) {
-      console.log('No papers found.');
-    }
-  } catch (error) {
-    console.error('Failed to fetch or parse arXiv data:', error);
-  }
-
-  await app.close();
+  // Start the server
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`Server is running on http://localhost:${port}`);
 }
 bootstrap();

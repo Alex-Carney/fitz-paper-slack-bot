@@ -3,6 +3,7 @@ import { PrismaModule } from 'nestjs-prisma';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ApiModule } from './api/api.module';
 import { SlackModule } from './slack/slack.module';
+import { ArxivModule } from "./arxiv/arxiv.module";
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { SlackModule } from './slack/slack.module';
     ScheduleModule.forRoot(),
     ApiModule,
     SlackModule,
+    ArxivModule,
   ],
   providers: [],
 })

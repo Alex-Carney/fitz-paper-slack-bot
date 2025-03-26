@@ -4,10 +4,10 @@ import { User } from '@prisma/client';
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getOrCreateUser(slackId: string, slackName: string): Promise<User> {
+  async getOrCreateUser(slackToken: string, slackName: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
-        slackId,
+        slackId: slackToken,
       },
     });
 
@@ -17,7 +17,7 @@ export class UserRepository {
 
     return this.prisma.user.create({
       data: {
-        slackId,
+        slackId: slackToken,
         slackName: slackName,
       },
     });
